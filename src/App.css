@@ -1,0 +1,53 @@
+/* Hide scrollbars globally */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.navbar-reset {
+  transform: none !important;
+}
+
+.appear {
+  transform: scale(1.004);
+  animation: appearAnimation 0.2s forwards;
+  overflow: hidden;
+}
+
+@keyframes appearAnimation {
+  from {
+    /* filter: brightness(0); */
+    transform: scale(0.1.004);
+  }
+  to {
+    /* filter: brightness(1); */
+    transform: scale(1);
+  }
+}
+.up {
+  transform: translateY(20px);
+  animation: upAnimation 0.3s forwards;
+  overflow: hidden;
+  opacity: 0;
+}
+
+@keyframes upAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* In your CSS file */
+.transition-transform {
+  transition: transform 0.4s ease;
+  will-change: transform;
+}
