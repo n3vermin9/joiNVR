@@ -35,6 +35,7 @@ function Post({
       time: date,
       post: `${inputValue}`,
       likes: [],
+      comments: [],
     };
 
     const updatedPosts = [...allData["currentUser"].posts, newPost];
@@ -57,24 +58,32 @@ function Post({
 
   return (
     <>
-      <div className="appear w-full h-screen flex flex-col items-center justify-center bg-zinc-900 text-white pb-40">
+      <div
+        className="appear w-full h-screen flex flex-col items-center justify-center
+       bg-zinc-900 text-white pb-40"
+      >
         {showMessage && <BubbleMessage message={message} />}
         <div className="w-[85%] h-[400px] flex flex-col items-center">
           <h1 className="w-full h-14 text-2xl font-semibold">New post</h1>
           <textarea
-            className="w-[100%] flex bg-[#131315] border rounded-md p-4 outline-none border-zinc-500 resize-y min-h-[40px] break-words pb-4"
+            className="w-[100%] flex bg-[#131315] border rounded-md p-4 outline-none
+             border-zinc-500 resize-y min-h-[40px] break-words pb-4"
             placeholder="Share your thoughts"
             value={inputValue}
             onChange={handleInput}
             rows={10}
           />
-          <p className="w-[95%] h-10 flex items-center justify-end pr-2 text-zinc-500 font-semibold text-sm">
+          <p
+            className="w-[95%] h-10 flex items-center justify-end pr-2 text-zinc-500
+           font-semibold text-sm"
+          >
             {textLimit - inputValue.length}
           </p>
         </div>
         <button
           onClick={handlePost}
-          className="w-[85%] h-[50px] mb-10 rounded-md bg-zinc-600 text-white font-extrabold"
+          className="w-[85%] h-[50px] mb-10 rounded-md bg-zinc-600 text-white
+           font-extrabold"
         >
           Post
         </button>

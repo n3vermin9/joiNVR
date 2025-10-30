@@ -19,8 +19,9 @@ function Fyp({
   setNavOffset,
   visitedUser,
   setVisitedUser,
+  visitUser,
 }) {
-  const [isSearch, setIsSearch] = useState(true);
+  const [isSearch, setIsSearch] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
@@ -69,11 +70,15 @@ function Fyp({
                 initial={user.charAt(0)}
                 visitedUser={visitedUser}
                 setVisitedUser={setVisitedUser}
+                visitUser={visitUser}
               />
             ))}
           </div>
         ) : (
-          <p className="absolute top-0 bottom-0 translate-y-1/2 text-zinc-500">
+          <p
+            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2
+           text-zinc-500 up w-full flex items-center justify-center"
+          >
             No result found
           </p>
         )}
@@ -94,7 +99,6 @@ function Fyp({
         postIndex: index,
       }))
     );
-
     allPosts.sort((a, b) => a.id - b.id);
 
     if (allPosts.length == 0) {
@@ -107,9 +111,9 @@ function Fyp({
       .map((post, index) => (
         <PostDiv
           key={index}
+          post={post}
           allData={allData}
           setAllData={setAllData}
-          post={post}
           user={post.user}
           // handleMore={handleMore}
         />

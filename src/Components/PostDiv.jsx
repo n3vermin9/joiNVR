@@ -1,8 +1,16 @@
 import React from "react";
 import Pfp from "./Pfp";
-import { IconDots, IconHeart, IconHeartFilled } from "@tabler/icons-react";
+import {
+  IconDots,
+  IconHeart,
+  IconHeartFilled,
+  IconMessage,
+} from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 function PostDiv({ user, post, handleMore, allData, setAllData }) {
+  const navigate = useNavigate();
+
   const handleLike = () => {
     const postAuthor = allData[user] ? user : "currentUser";
     const thisPostAuthor = allData[postAuthor];
@@ -44,17 +52,29 @@ function PostDiv({ user, post, handleMore, allData, setAllData }) {
         {post.post}
       </p>
       <div className="h-11  flex items-center justify-between text-[13px] text-zinc-300 px-4">
-        <div className="w-fit h-10 flex items-center justify-start gap-1">
-          <button onClick={() => handleLike()}>
-            {!post.likes.includes(allData["currentUser"].id) ? (
-              <IconHeart className="w-5 h-5" />
-            ) : (
-              <IconHeartFilled className="w-5 h-5 text-red-600" />
-            )}
-          </button>
-          <p className="text-[17px] flex items-center justify-center mt-[2px]">
-            {post.likes.length}
-          </p>
+        <div className="w-fit h-10 flex items-center justify-start gap-5">
+          <div className="flex gap-1 ">
+            <button onClick={() => handleLike()}>
+              {!post.likes.includes(allData["currentUser"].id) ? (
+                <IconHeart className="w-6 h-6" />
+              ) : (
+                <IconHeartFilled className="w-6 h-6 text-red-600" />
+              )}
+            </button>
+            <p className="text-[17px] flex items-center justify-center mt-[2px]">
+              {post.likes.length}
+            </p>
+          </div>
+          <div className="flex items-center justify-center gap-1">
+            <button
+              onClick={() => navigate("/comments", { state: { post, user } })}
+            >
+              <IconMessage className="w-6 h-6" />
+            </button>
+            <p className="text-[17px] flex items-center justify-center mt-[2px]">
+              {post.comments.length}
+            </p>
+          </div>
         </div>
         <p className="h-10 flex items-center justify-end text-[13px] text-zinc-300">
           {post.time}

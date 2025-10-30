@@ -1,5 +1,5 @@
 import ProtectedRoute from "./ProtectedRoute";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Profile from "./Pages/Profile";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
@@ -14,16 +14,19 @@ import Post from "./Pages/Post";
 import Fyp from "./Pages/Fyp";
 import "./App.css";
 import VisitProfile from "./Pages/VisitProfile";
+import Comments from "./Pages/Comments";
 
 function App() {
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
+
   const [allData, setAllData] = useState(() => {
     const getData = localStorage.getItem("allData");
     return getData ? JSON.parse(getData) : null;
   });
 
-  
   const [navOffset, setNavOffset] = useState(() => {
     const getOffset = localStorage.getItem("navOffset");
     return getOffset ? JSON.parse(getOffset) : 0;
@@ -48,6 +51,11 @@ function App() {
     setTimeout(() => setShowMessage(false), 2000);
   };
 
+  const visitUser = (profile) => {
+    navigate(`/visitProfile`);
+    setVisitedUser(profile);
+  };
+
   const commonProps = {
     triggerMessage,
     showMessage,
@@ -60,6 +68,7 @@ function App() {
     setNavOffset,
     visitedUser,
     setVisitedUser,
+    visitUser,
   };
 
   return (
@@ -144,6 +153,14 @@ function App() {
         element={
           <ProtectedRoute user={allData}>
             <VisitProfile {...commonProps} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/comments"
+        element={
+          <ProtectedRoute user={allData}>
+            <Comments {...commonProps} />
           </ProtectedRoute>
         }
       />

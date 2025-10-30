@@ -3,17 +3,12 @@ import Pfp from "./Pfp";
 import { IconChevronRight } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
-function UserCard({ allData, user, initial, visitedUser, setVisitedUser }) {
+function UserCard({ allData, user, initial, visitedUser, setVisitedUser, visitUser}) {
   const navigate = useNavigate();
-
-  const visitUser = () => {
-    navigate("/visitProfile");
-    setVisitedUser(allData[user]);
-  };
 
   return (
     <div
-      onClick={() => visitUser()}
+      onClick={() => visitUser(allData[user])}
       className="up w-[86%] h-[70px] border border-zinc-600
      bg-zinc-800/40 rounded-md flex items-center gap-5 px-3"
     >
