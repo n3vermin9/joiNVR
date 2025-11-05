@@ -32,23 +32,23 @@ function Login({
     }
     if (!allData) {
       triggerMessage("Username or password is invalid");
-      return
+      return;
     }
-
-    let dataObj = allData[username];
-
-    if (dataObj == null) {
+    if (allData[username].pass !== password) {
       triggerMessage("Username or password is invalid");
       return;
-    } else {
-      allData["currentUser"] = dataObj;
-
-      delete allData[username];
-
-      localStorage.setItem("allData", JSON.stringify(allData));
-
-      navigate("/");
     }
+    if (allData[username] == null) {
+      triggerMessage("Username or password is invalid");
+      return;
+    }
+    allData["currentUser"] = allData[username];
+
+    delete allData[username];
+
+    localStorage.setItem("allData", JSON.stringify(allData));
+
+    navigate("/");
   };
 
   return (
@@ -69,9 +69,7 @@ function Login({
           placeholder={"Password"}
         />
         <div className="w-[85%] flex justify-end">
-          <button
-            className="w-[145px] flex justify-end text-blue-400"
-          >
+          <button className="w-[145px] flex justify-end text-blue-400">
             Forgot password?
           </button>
         </div>

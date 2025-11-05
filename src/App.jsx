@@ -1,5 +1,11 @@
 import ProtectedRoute from "./ProtectedRoute";
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Profile from "./Pages/Profile";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
@@ -15,6 +21,8 @@ import Fyp from "./Pages/Fyp";
 import "./App.css";
 import VisitProfile from "./Pages/VisitProfile";
 import Comments from "./Pages/Comments";
+import Followers from "./Pages/Followers";
+import Following from "./Pages/Following";
 
 function App() {
   const [showMessage, setShowMessage] = useState(false);
@@ -53,7 +61,11 @@ function App() {
 
   const visitUser = (profile) => {
     navigate(`/visitProfile`);
-    setVisitedUser(profile);
+    console.log(profile)
+    let checkProfile =
+    profile == undefined ? allData["currentUser"] : profile;
+    console.log(checkProfile)
+    setVisitedUser(checkProfile);
   };
 
   const commonProps = {
@@ -161,6 +173,22 @@ function App() {
         element={
           <ProtectedRoute user={allData}>
             <Comments {...commonProps} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/followers"
+        element={
+          <ProtectedRoute user={allData}>
+            <Followers {...commonProps} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/following"
+        element={
+          <ProtectedRoute user={allData}>
+            <Following {...commonProps} />
           </ProtectedRoute>
         }
       />

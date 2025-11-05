@@ -115,6 +115,7 @@ function Fyp({
           allData={allData}
           setAllData={setAllData}
           user={post.user}
+          visitUser={visitUser}
           // handleMore={handleMore}
         />
       ));

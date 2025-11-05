@@ -60,7 +60,7 @@ function Comments({
     }, 300);
   };
 
-  const handleComment = ({ postId, userName, message }) => {
+  const handleComment = ({ postId, message }) => {
     if (!inputValue) return;
 
     const time = Date.now();
@@ -73,9 +73,16 @@ function Comments({
     userPosts.forEach((post) => {
       if (post.id === postId) {
         if (!post.comments) post.comments = [];
-        post.comments.push({id: time, name: userName, message, time: date, likes: []});
+        post.comments.push({
+          id: time,
+          name: allData["currentUser"].name,
+          message,
+          time: date,
+          likes: [],
+        });
       }
     });
+    console.log(allData["currentUser"].name);
     setAllData(updatedData);
     localStorage.setItem("allData", JSON.stringify(updatedData));
   };
@@ -96,6 +103,7 @@ function Comments({
             likes={comment.likes}
             setAllData={setAllData}
             post={post}
+            visitUser={visitUser}
           />
         ));
     } else {
@@ -114,7 +122,7 @@ function Comments({
         <div className="w-full mt-[80px] border-b border-zinc-700 px-2 flex flex-col gap-4">
           <div
             onClick={() => visitUser(allData[post.user])}
-            className="flex items-center px-2"
+            className="flex items-center px-2 "
           >
             <Pfp
               size={8}
@@ -126,11 +134,11 @@ function Comments({
               }
               color={allData[post.user]?.color}
             />
-            <p className="min-h-[20px] break-all w-full flex items-center px-2 font-semibold">
+            <p className="min-h-[20px] w-fit cursor-pointer flex items-center px-2 font-semibold">
               {post.user ? post.user : allData["currentUser"].name}
             </p>
           </div>
-          <p className="min-h-[50px] break-all w-full flex px-4 py-2">
+          <p className="min-h-[50px]  break-all w-full flex px-4 py-2">
             {currentPost.post}
           </p>
           <div className="h-8 flex items-center justify-between px-2">
@@ -164,10 +172,9 @@ function Comments({
           onClick={() => {
             handleComment({
               postId: currentPost.id,
-              userName: allData["currentUser"].name,
               message: inputValue,
             });
-            setInputValue(""); // clear the input field
+            setInputValue("");
           }}
           className="up bg-zinc-700 rounded-full h-1/2 aspect-square flex items-center justify-center border border-zinc-500"
         >

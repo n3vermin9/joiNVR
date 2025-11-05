@@ -1,14 +1,15 @@
 import React from "react";
 import Pfp from "./Pfp";
 import {
-  IconDots,
+  IconBookmark,
   IconHeart,
   IconHeartFilled,
   IconMessage,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
-function PostDiv({ user, post, handleMore, allData, setAllData }) {
+function PostDiv({ user, post, allData, setAllData, visitUser }) {
   const navigate = useNavigate();
 
   const handleLike = () => {
@@ -33,6 +34,22 @@ function PostDiv({ user, post, handleMore, allData, setAllData }) {
     localStorage.setItem("allData", JSON.stringify(newAllData));
   };
 
+  const handleMore = (id) => {
+    if (allData[user]) return;
+    const updatedPostsData = allData["currentUser"].posts.filter(
+      (item) => item.id !== id
+    );
+    const newAllData = {
+      ...allData,
+      ["currentUser"]: {
+        ...allData["currentUser"],
+        posts: updatedPostsData,
+      },
+    };
+    setAllData(newAllData);
+    localStorage.setItem("allData", JSON.stringify(newAllData));
+  };
+
   return (
     <div
       className="appear w-[92%] border border-zinc-600 bg-zinc-800/40 rounded-md
@@ -42,10 +59,17 @@ function PostDiv({ user, post, handleMore, allData, setAllData }) {
         className="border-b border-b-zinc-700 h-[70px] flex items-center justify-between
        px-3"
       >
-        <Pfp size={12} data={allData} name={user} />
-        <h1>{user}</h1>
-        <button onClick={() => console.log(post.likes)}>
-          <IconDots className="w-8 h-8" />
+        <Pfp
+          size={12}
+          data={allData}
+          name={user}
+          onClick={() => visitUser(allData[user])}
+        />
+        <h1 onClick={() => visitUser(allData[user])} className="cursor-pointer">
+          {user}
+        </h1>
+        <button onClick={() => handleMore(post.id)}>
+          {allData[user] ? <IconBookmark /> : <IconTrash className="w-6 h-6" />}
         </button>
       </div>
       <p className="min-h-[50px] break-all w-full flex items-center px-4">

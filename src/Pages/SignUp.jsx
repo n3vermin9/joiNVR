@@ -79,6 +79,8 @@ function SignUp({
       bio: "",
       color: pfpColors[Math.floor(Math.random() * pfpColors.length)],
       posts: [],
+      followers: [],
+      following: [],
     };
     const updatedAllData = {
       ...allData,

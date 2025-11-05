@@ -10,37 +10,42 @@ function CommentDiv({
   message,
   setAllData,
   post,
+  visitUser,
 }) {
   const handleLike = () => {
-    const postAuthor = allData[user] ? user : "currentUser";
-    const thisPostAuthor = allData[postAuthor];
+    const currentUserId = allData["currentUser"].id;
+    let updatedAllData = { ...allData };
 
-    const updatedLikes = comment.likes.includes(allData["currentUser"].id)
-      ? comment.likes.filter((like) => like !== allData["currentUser"].id)
-      : [...comment.likes, allData["currentUser"].id];
+    for (const [userKey, userData] of Object.entries(allData)) {
+      if (!userData.posts) continue;
 
-    const newAllData = {
-      ...allData,
-      [postAuthor]: {
-        ...thisPostAuthor,
-        posts: thisPostAuthor.posts.map((p) =>
-          p.id === post.id
-            ? {
-                ...p,
-                comments: p.comments.map((comm) =>
-                  comm.id === comment.id
-                    ? { ...comment, likes: updatedLikes }
-                    : comm
-                ),
-              }
-            : p
-        ),
-      },
-    };
-    console.log(comment.likes)
+      const postIndex = userData.posts.findIndex((p) => p.id === post.id);
+      if (postIndex === -1) continue;
 
-    setAllData(newAllData);
-    localStorage.setItem("allData", JSON.stringify(newAllData));
+      const commentIndex = userData.posts[postIndex].comments.findIndex(
+        (comm) => comm.id === comment.id
+      );
+      if (commentIndex === -1) continue;
+
+      const commentLikes =
+        userData.posts[postIndex].comments[commentIndex].likes;
+
+      const newLikes = commentLikes.includes(currentUserId)
+        ? commentLikes.filter((id) => id !== currentUserId)
+        : [...commentLikes, currentUserId];
+
+      allData[userKey].posts[postIndex].comments[commentIndex] = {
+        ...allData[userKey].posts[postIndex].comments[commentIndex],
+        likes: newLikes,
+      };
+
+      break;
+    }
+    console.log(user);
+    console.log(post);
+
+    setAllData(updatedAllData);
+    localStorage.setItem("allData", JSON.stringify(updatedAllData));
   };
 
   return (
@@ -51,15 +56,29 @@ function CommentDiv({
       <Pfp
         size={12}
         data={allData}
-        name={user.charAt(0)}
+        name={user?.charAt(0)}
         color={
           allData[user] ? allData[user].color : allData["currentUser"].color
         }
+        onClick={() => visitUser(allData[user])}
       />
-      <div className="w-[80%] ">
-        <h1 className="font-semibold ">{user}</h1>
+      <div className="w-[80%]">
+        <div className="font-semibold h-8 flex items-center gap-2 ">
+          <h1
+            onClick={() => visitUser(allData[user])}
+            className="
+          cursor-pointer text-sm"
+          >
+            {user}
+          </h1>
+          {(user === post.user || post.user === undefined) && (
+            <p className="bg-zinc-700 w-fit h-5 px-1 font-normal text-[12px] flex items-center justify-center">
+              Author
+            </p>
+          )}
+        </div>
         <p className="text-sm pl-1 pr-2 mt-1">{message}</p>
-        <p className="text-[12px] mt-4 text-zinc-400">{time}</p>
+        <p className="text-[12px] mt-4 text-zinc-400 ">{time}</p>
       </div>
       <div
         className="absolute right-5 top-2 flex items-center

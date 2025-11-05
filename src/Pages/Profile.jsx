@@ -16,13 +16,21 @@ function Profile({
   allData,
   setAllData,
   navOffset,
-  setNavOffset
+  setNavOffset,
+  visitUser,
+  visitedUser,
+  setVisitedUser,
 }) {
   const navigate = useNavigate();
-
+  setVisitedUser(allData["currentUser"]);
   const handlePostsAppear = () => {
     if (allData[`currentUser`].posts.length) {
-      return allData[`currentUser`].posts
+      const updatedPosts = allData[`currentUser`].posts.map((post) => ({
+        ...post,
+        user: allData[`currentUser`].name,
+      }));
+
+      return updatedPosts
         .slice()
         .reverse()
         .map((post, index) => (
@@ -33,26 +41,12 @@ function Profile({
             setAllData={setAllData}
             user={allData[`currentUser`].name}
             initial={allData[`currentUser`].name.charAt(0)}
-            handleMore={handleMore}
+            visitUser={visitUser}
           />
         ));
     } else {
       return <NoPosts title={"You have no posts"} />;
     }
-  };
-  const handleMore = (id) => {
-    const updatedPostsData = allData["currentUser"].posts.filter(
-      (item) => item.id !== id
-    );
-    const newAllData = {
-      ...allData,
-      ["currentUser"]: {
-        ...allData["currentUser"],
-        posts: updatedPostsData,
-      },
-    };
-    setAllData(newAllData);
-    localStorage.setItem("allData", JSON.stringify(newAllData));
   };
 
   return (
@@ -73,11 +67,27 @@ function Profile({
             <div className="flex flex-col items-center justify-center gap-3">
               <div className="flex gap-2">
                 <ProfileNumbers
+                  number={allData["currentUser"].following.length}
+                  title={"Following"}
+                  onClick={() =>
+                    navigate("/following", {
+                      state: { user: "currentUser" },
+                    })
+                  }
+                />
+                <ProfileNumbers
+                  number={allData["currentUser"].followers.length}
+                  title={"Followers"}
+                  onClick={() =>
+                    navigate("/followers", {
+                      state: { user: "currentUser" },
+                    })
+                  }
+                />
+                <ProfileNumbers
                   number={allData[`currentUser`].posts.length}
                   title={"Posts"}
                 />
-                <ProfileNumbers number={0} title={"Following"} />
-                <ProfileNumbers number={0} title={"Followers"} />
               </div>
               <button
                 onClick={() => navigate("/editProfile")}
@@ -95,7 +105,7 @@ function Profile({
         </div>
         {handlePostsAppear()}
       </div>
-      <NavBar navOffset={navOffset} setNavOffset={setNavOffset}/>
+      <NavBar navOffset={navOffset} setNavOffset={setNavOffset} />
     </>
   );
 }
