@@ -4,7 +4,7 @@ import NavBar from "../Components/NavBar";
 import { useNavigate } from "react-router-dom";
 import PostDiv from "../Components/PostDiv";
 import SearchBtn from "../Components/SearchBtn";
-import Dm from "../Components/Dm";
+import InboxBtn from "../Components/InboxBtn";
 import NoPosts from "../Components/NoPosts";
 import Input from "../Components/Input";
 import UserCard from "../Components/UserCard";
@@ -56,7 +56,7 @@ function Fyp({
           onChange={handleInputChange}
           placeholder={"Username"}
           classes={
-            "up bg-zinc-800 border border-zinc-600 text-white rounded-[50px] mt-[10px]"
+            "up bg-zinc-800 border border-zinc-600 text-white rounded-[100px] mt-[10px]"
           }
         />
         {searchResult.length && inputValue !== "" ? (
@@ -122,12 +122,15 @@ function Fyp({
   };
   return (
     <>
-      <div className="appear w-full min-h-screen h-full hide-scrollbar flex flex-col gap-4 overflow-y-scroll items-center bg-zinc-900 text-white pb-[130px]">
+      <div className="appear w-full min-h-screen h-full hide-scrollbar
+       flex flex-col gap-4 overflow-y-scroll items-center bg-zinc-900
+        text-white pb-[130px]">
         {showMessage && <BubbleMessage message={message} />}
-        <div className="h-[60px] w-full border-b-[1px] border-zinc-700 text-lg flex font-semibold items-center justify-center text-white">
-          <SearchBtn onClick={toggleSearch} isSearch={isSearch} />
+        <div className="h-[60px] w-full border-b-[1px] border-zinc-700
+         text-lg flex font-semibold items-center justify-center text-white">
+          <InboxBtn allData={allData}/>
           <h1 className="">JoiNVR</h1>
-          <Dm />
+          <SearchBtn onClick={toggleSearch} isSearch={isSearch} />
         </div>
         {!isSearch ? handlePostsAppear() : handleSearchAppear()}
       </div>

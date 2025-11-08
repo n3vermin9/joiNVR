@@ -23,6 +23,7 @@ import VisitProfile from "./Pages/VisitProfile";
 import Comments from "./Pages/Comments";
 import Followers from "./Pages/Followers";
 import Following from "./Pages/Following";
+import Inbox from "./Pages/Inbox";
 
 function App() {
   const [showMessage, setShowMessage] = useState(false);
@@ -61,10 +62,8 @@ function App() {
 
   const visitUser = (profile) => {
     navigate(`/visitProfile`);
-    console.log(profile)
     let checkProfile =
     profile == undefined ? allData["currentUser"] : profile;
-    console.log(checkProfile)
     setVisitedUser(checkProfile);
   };
 
@@ -189,6 +188,14 @@ function App() {
         element={
           <ProtectedRoute user={allData}>
             <Following {...commonProps} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/inbox"
+        element={
+          <ProtectedRoute user={allData}>
+            <Inbox {...commonProps} />
           </ProtectedRoute>
         }
       />

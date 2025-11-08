@@ -19,6 +19,8 @@ function EditProfile({
   const [bio, setBio] = useState(allData["currentUser"].bio);
   const [usernameTaken, setUsernameTaken] = useState(false);
 
+  const users = Object.values(allData).flatMap((user) => user.name || "");
+
   const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -49,17 +51,11 @@ function EditProfile({
       return;
     }
 
-    // username checks
-
-    for (let i = 0; i < localStorage.length; i++) {
-      // const key = localStorage.key(i);
-      if (username) {
-        setUsername(true);
-        break;
-      }
-    }
-    // dont forget here to prevent taking sum1 name
-    if (usernameTaken) {
+    if (
+      users.find(
+        (name) => name == username && username !== allData["currentUser"].name
+      )
+    ) {
       triggerMessage("Username is already taken");
     } else {
       const newAllData = {

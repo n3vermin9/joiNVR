@@ -22,7 +22,10 @@ function Profile({
   setVisitedUser,
 }) {
   const navigate = useNavigate();
-  setVisitedUser(allData["currentUser"]);
+  useEffect(() => {
+    setVisitedUser(allData["currentUser"]);
+  }, []);
+  
   const handlePostsAppear = () => {
     if (allData[`currentUser`].posts.length) {
       const updatedPosts = allData[`currentUser`].posts.map((post) => ({
@@ -42,6 +45,7 @@ function Profile({
             user={allData[`currentUser`].name}
             initial={allData[`currentUser`].name.charAt(0)}
             visitUser={visitUser}
+            triggerMessage={triggerMessage}
           />
         ));
     } else {

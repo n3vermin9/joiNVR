@@ -9,16 +9,52 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
-function PostDiv({ user, post, allData, setAllData, visitUser }) {
+function PostDiv({
+  user,
+  post,
+  allData,
+  setAllData,
+  visitUser,
+  triggerMessage,
+}) {
   const navigate = useNavigate();
 
   const handleLike = () => {
     const postAuthor = allData[user] ? user : "currentUser";
     const thisPostAuthor = allData[postAuthor];
 
-    const updatedLikes = post.likes.includes(allData["currentUser"].id)
+    const isLiked = post.likes.includes(allData["currentUser"].id);
+    const updatedLikes = isLiked
       ? post.likes.filter((like) => like !== allData["currentUser"].id)
       : [...post.likes, allData["currentUser"].id];
+
+    const notificationId = `${allData["currentUser"].id}_${post.id}`;
+
+    const time = Date.now();
+    const date = new Date(time).toLocaleString();
+    let updatedInbox;
+
+    if (allData[postAuthor].name !== allData["currentUser"].name) {
+      const newNotification = {
+        id: notificationId,
+        user: allData["currentUser"].name,
+        notification: "liked your post",
+        link: "",
+        icon: "like",
+        time: date,
+        unread: true,
+      };
+
+      updatedInbox = [...allData[postAuthor].inbox];
+
+      if (isLiked) {
+        updatedInbox = updatedInbox.filter(
+          (notif) => notif.id !== notificationId
+        );
+      } else {
+        updatedInbox.push(newNotification);
+      }
+    }
 
     const newAllData = {
       ...allData,
@@ -27,6 +63,9 @@ function PostDiv({ user, post, allData, setAllData, visitUser }) {
         posts: thisPostAuthor.posts.map((p) =>
           p.id === post.id ? { ...p, likes: updatedLikes } : p
         ),
+        ...(allData[postAuthor].name !== allData["currentUser"].name && {
+          inbox: updatedInbox,
+        }),
       },
     };
 
@@ -46,6 +85,7 @@ function PostDiv({ user, post, allData, setAllData, visitUser }) {
         posts: updatedPostsData,
       },
     };
+    triggerMessage("Post removed");
     setAllData(newAllData);
     localStorage.setItem("allData", JSON.stringify(newAllData));
   };

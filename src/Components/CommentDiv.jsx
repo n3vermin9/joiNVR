@@ -41,8 +41,6 @@ function CommentDiv({
 
       break;
     }
-    console.log(user);
-    console.log(post);
 
     setAllData(updatedAllData);
     localStorage.setItem("allData", JSON.stringify(updatedAllData));

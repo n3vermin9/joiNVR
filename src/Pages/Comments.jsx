@@ -31,6 +31,8 @@ function Comments({
   // };
 
   const [currentPost, setCurrentPost] = useState(post);
+  const currentAuthor =
+    post.user == allData["currentUser"].name ? "currentUser" : post.user;
 
   useEffect(() => {
     if (post && allData) {
@@ -45,7 +47,7 @@ function Comments({
   }, [allData, post?.id]);
 
   const textLimit = 60;
-
+  
   const handleInputChange = (e) => {
     let value = e.target.value;
     if (value.length > textLimit) {
@@ -56,35 +58,77 @@ function Comments({
     // Debounce
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      console.log("Processed input:", value);
+      // console.log("Processed input:", value);
     }, 300);
   };
 
+  const longComment = (inputValue) => {
+    return inputValue.length > 10
+      ? `${inputValue.slice(0, 10)}...`
+      : inputValue;
+  }
   const handleComment = ({ postId, message }) => {
     if (!inputValue) return;
 
+    const notificationId = `${allData["currentUser"].id}_${post.id}`;
+
     const time = Date.now();
     const date = new Date(time).toLocaleString();
+    let updatedInbox;
 
-    const updatedData = { ...allData };
-    const userPosts = Object.values(updatedData).flatMap(
-      (user) => user.posts || []
-    );
-    userPosts.forEach((post) => {
-      if (post.id === postId) {
-        if (!post.comments) post.comments = [];
-        post.comments.push({
-          id: time,
-          name: allData["currentUser"].name,
-          message,
-          time: date,
-          likes: [],
-        });
-      }
-    });
-    console.log(allData["currentUser"].name);
-    setAllData(updatedData);
-    localStorage.setItem("allData", JSON.stringify(updatedData));
+    if (allData["currentUser"].name !== post.user) {
+      const newNotification = {
+        id: notificationId,
+        user: allData["currentUser"].name,
+        notification: `commented: ${longComment(inputValue)}`,
+        link: "",
+        icon: "comment",
+        time: date,
+        unread: true,
+      };
+
+      updatedInbox = [...allData[currentAuthor].inbox];
+
+      // if (isLiked) {
+      //   updatedInbox = updatedInbox.filter(
+      //     (notif) => notif.id !== notificationId
+      //   );
+      // } else {
+      // }
+      updatedInbox.push(newNotification);
+    }
+
+    const newComment = {
+      id: time,
+      name: allData["currentUser"].name,
+      message,
+      time: date,
+      likes: [],
+    };
+
+    const newAllData = {
+      ...allData,
+      [currentAuthor]: {
+        ...allData[currentAuthor],
+        posts: allData[currentAuthor].posts.map((post) => {
+          if (post.id === postId) {
+            const updatedComments = post.comments ? [...post.comments] : [];
+            updatedComments.push(newComment);
+            return {
+              ...post,
+              comments: updatedComments,
+            };
+          }
+          return post;
+        }),
+        ...(allData[currentAuthor].name !== allData["currentUser"].name && {
+          inbox: updatedInbox,
+        }),
+      },
+    };
+    setAllData(newAllData);
+    localStorage.setItem("allData", JSON.stringify(newAllData));
+    // console.log(...allData[currentAuthor].inbox)
   };
 
   const displayComments = () => {
@@ -135,7 +179,7 @@ function Comments({
               color={allData[post.user]?.color}
             />
             <p className="min-h-[20px] w-fit cursor-pointer flex items-center px-2 font-semibold">
-              {post.user ? post.user : allData["currentUser"].name}
+              {currentAuthor == "currentUser" ? "You" : currentAuthor}
             </p>
           </div>
           <p className="min-h-[50px]  break-all w-full flex px-4 py-2">
@@ -165,7 +209,7 @@ function Comments({
           onChange={handleInputChange}
           placeholder={"Comment..."}
           classes={
-            "up bg-zinc-800 w-[80%] border border-zinc-600 text-white rounded-[50px]"
+            "up bg-zinc-800 w-[80%] border border-zinc-600 text-white rounded-[100px]"
           }
         />
         <button

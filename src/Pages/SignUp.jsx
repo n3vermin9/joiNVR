@@ -64,7 +64,6 @@ function SignUp({
         if (key.startsWith(username)) {
           setUsernameTaken(true);
           triggerMessage("Username is already taken");
-          console.log(1);
           setUsernameTaken(false);
           return;
         }
@@ -76,6 +75,7 @@ function SignUp({
       id: randomId,
       name: username,
       pass: password,
+      inbox: [],
       bio: "",
       color: pfpColors[Math.floor(Math.random() * pfpColors.length)],
       posts: [],

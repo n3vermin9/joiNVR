@@ -78,11 +78,6 @@ function VisitProfile({
       ? visitedUser.followers.filter((id) => id !== allData.currentUser.id)
       : [...(visitedUser.followers || []), allData.currentUser.id];
 
-    const updatedUser = {
-      ...visitedUser,
-      followers: updatedFollowers,
-    };
-
     const updatedFollowing = isFollowing
       ? allData["currentUser"].following.filter((id) => id !== visitedUser.id)
       : [...(allData["currentUser"].following || []), visitedUser.id];
@@ -90,6 +85,38 @@ function VisitProfile({
     const updatedMe = {
       ...allData["currentUser"],
       following: updatedFollowing,
+    };
+
+    const time = Date.now();
+    const date = new Date(time).toLocaleString();
+    let updatedInbox;
+
+    const notificationId = `${allData["currentUser"].id}_${currentProfile.id}`;
+
+    const newNotification = {
+      id: notificationId,
+      user: allData["currentUser"].name,
+      notification: `started following you`,
+      link: "",
+      icon: "person",
+      time: date,
+      unread: true,
+    };
+
+    updatedInbox = [...allData[currentProfile.name].inbox];
+
+    if (isFollowing) {
+      updatedInbox = updatedInbox.filter(
+        (notif) => notif.id !== notificationId
+      );
+    } else {
+      updatedInbox.push(newNotification);
+    }
+
+    const updatedUser = {
+      ...visitedUser,
+      followers: updatedFollowers,
+      inbox: updatedInbox
     };
 
     const newAllData = {

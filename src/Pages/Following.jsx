@@ -71,7 +71,7 @@ function Following({
         className="h-[66px] flex items-center justify-center
         text-xl font-semibold"
       >
-        Followers
+        Followings
       </h1>
       {renderFollowing()}
     </div>
