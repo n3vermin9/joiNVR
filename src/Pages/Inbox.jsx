@@ -43,7 +43,11 @@ function Inbox({
             user={item.user}
             notification={item.notification}
             icon={item.icon}
+            link={item.link}
+            time={item.time}
             unread={item.unread}
+            allData={allData}
+            visitUser={visitUser}
           />
         );
       });

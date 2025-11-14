@@ -25,11 +25,6 @@ function Comments({
 
   const { post } = location.state || {};
 
-  // const visitUser = () => {
-  //   navigate("/visitProfile");
-  //   setVisitedUser();
-  // };
-
   const [currentPost, setCurrentPost] = useState(post);
   const currentAuthor =
     post.user == allData["currentUser"].name ? "currentUser" : post.user;
@@ -47,7 +42,7 @@ function Comments({
   }, [allData, post?.id]);
 
   const textLimit = 60;
-  
+
   const handleInputChange = (e) => {
     let value = e.target.value;
     if (value.length > textLimit) {
@@ -66,24 +61,31 @@ function Comments({
     return inputValue.length > 10
       ? `${inputValue.slice(0, 10)}...`
       : inputValue;
-  }
+  };
   const handleComment = ({ postId, message }) => {
     if (!inputValue) return;
+    console.log(postId);
 
-    const notificationId = `${allData["currentUser"].id}_${post.id}`;
+    const date = new Date();
+    const mm = String(date.getMinutes()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mo = String(date.getMonth() + 1).padStart(2, "0");
+    const yy = String(date.getFullYear()).slice(-2);
 
-    const time = Date.now();
-    const date = new Date(time).toLocaleString();
+    const time = `${hh}:${mm}, ${dd}.${mo}.${yy}`;
     let updatedInbox;
+
+    const notificationId = `${allData["currentUser"].id}_${time}`;
 
     if (allData["currentUser"].name !== post.user) {
       const newNotification = {
         id: notificationId,
         user: allData["currentUser"].name,
         notification: `commented: ${longComment(inputValue)}`,
-        link: "",
+        link: post,
         icon: "comment",
-        time: date,
+        time: time,
         unread: true,
       };
 
@@ -99,12 +101,13 @@ function Comments({
     }
 
     const newComment = {
-      id: time,
+      id: Date.now(),
       name: allData["currentUser"].name,
       message,
-      time: date,
+      time: time,
       likes: [],
     };
+    console.log(newComment)
 
     const newAllData = {
       ...allData,
@@ -128,7 +131,6 @@ function Comments({
     };
     setAllData(newAllData);
     localStorage.setItem("allData", JSON.stringify(newAllData));
-    // console.log(...allData[currentAuthor].inbox)
   };
 
   const displayComments = () => {

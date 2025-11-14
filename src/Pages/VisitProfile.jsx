@@ -87,8 +87,15 @@ function VisitProfile({
       following: updatedFollowing,
     };
 
-    const time = Date.now();
-    const date = new Date(time).toLocaleString();
+    const date = new Date();
+    const mm = String(date.getMinutes()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mo = String(date.getMonth() + 1).padStart(2, "0");
+    const yy = String(date.getFullYear()).slice(-2);
+
+    const time = `${hh}:${mm}, ${dd}.${mo}.${yy}`;
+
     let updatedInbox;
 
     const notificationId = `${allData["currentUser"].id}_${currentProfile.id}`;
@@ -99,7 +106,7 @@ function VisitProfile({
       notification: `started following you`,
       link: "",
       icon: "person",
-      time: date,
+      time: time,
       unread: true,
     };
 
@@ -114,9 +121,9 @@ function VisitProfile({
     }
 
     const updatedUser = {
-      ...visitedUser,
+      ...allData[visitedUser.name],
       followers: updatedFollowers,
-      inbox: updatedInbox
+      inbox: updatedInbox,
     };
 
     const newAllData = {

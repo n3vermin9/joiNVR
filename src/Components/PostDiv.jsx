@@ -19,29 +19,35 @@ function PostDiv({
 }) {
   const navigate = useNavigate();
 
+  const postAuthor = allData[user] ? user : "currentUser";
   const handleLike = () => {
-    const postAuthor = allData[user] ? user : "currentUser";
     const thisPostAuthor = allData[postAuthor];
-
     const isLiked = post.likes.includes(allData["currentUser"].id);
     const updatedLikes = isLiked
       ? post.likes.filter((like) => like !== allData["currentUser"].id)
       : [...post.likes, allData["currentUser"].id];
 
-    const notificationId = `${allData["currentUser"].id}_${post.id}`;
+    const date = new Date();
+    const mm = String(date.getMinutes()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mo = String(date.getMonth() + 1).padStart(2, "0");
+    const yy = String(date.getFullYear()).slice(-2);
 
-    const time = Date.now();
-    const date = new Date(time).toLocaleString();
+    const time = `${hh}:${mm}, ${dd}.${mo}.${yy}`;
+    
     let updatedInbox;
+
+    const notificationId = `${allData["currentUser"].id}_${post.id}`;
 
     if (allData[postAuthor].name !== allData["currentUser"].name) {
       const newNotification = {
         id: notificationId,
         user: allData["currentUser"].name,
         notification: "liked your post",
-        link: "",
+        link: post,
         icon: "like",
-        time: date,
+        time: time,
         unread: true,
       };
 
