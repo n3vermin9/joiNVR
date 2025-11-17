@@ -53,9 +53,3 @@
     transform: translateY(0);
   }
 }
-
-/* In your CSS file */
-.transition-transform {
-  transition: transform 0.4s ease;
-  will-change: transform;
-}

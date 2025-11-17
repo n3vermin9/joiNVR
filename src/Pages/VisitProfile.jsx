@@ -94,7 +94,22 @@ function VisitProfile({
     const mo = String(date.getMonth() + 1).padStart(2, "0");
     const yy = String(date.getFullYear()).slice(-2);
 
-    const time = `${hh}:${mm}, ${dd}.${mo}.${yy}`;
+    const months = [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "dec",
+    ];
+
+    const time = `${hh}:${mm}, ${months[parseInt(mo - 1)]} ${dd}`;
 
     let updatedInbox;
 

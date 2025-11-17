@@ -27,7 +27,6 @@ function Inbox({
         })),
       },
     };
-    console.log(1)
     setAllData(newAllData);
     localStorage.setItem("allData", JSON.stringify(newAllData));
   };

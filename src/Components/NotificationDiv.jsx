@@ -48,7 +48,7 @@ function NotificationDiv({
       ) : (
         icon == "person" && <IconUser />
       )}
-      <p className="text-md w-[75%]">
+      <div className="text-md w-[75%]">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -60,7 +60,7 @@ function NotificationDiv({
         </button>
         {notification}
         <p className="text-[11px] text-zinc-400">{time}</p>
-      </p>
+      </div>
       <IconChevronRight className="absolute right-3" />
     </div>
   );

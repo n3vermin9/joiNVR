@@ -8,6 +8,7 @@ import InboxBtn from "../Components/InboxBtn";
 import NoPosts from "../Components/NoPosts";
 import Input from "../Components/Input";
 import UserCard from "../Components/UserCard";
+import { IconCoin } from "@tabler/icons-react";
 
 function Fyp({
   triggerMessage,
@@ -122,15 +123,21 @@ function Fyp({
   };
   return (
     <>
-      <div className="appear w-full min-h-screen h-full hide-scrollbar
+      <div
+        className="appear w-full min-h-screen h-full hide-scrollbar
        flex flex-col gap-4 overflow-y-scroll items-center bg-zinc-900
-        text-white pb-[130px]">
+        text-white pb-[130px]"
+      >
         {showMessage && <BubbleMessage message={message} />}
-        <div className="h-[60px] w-full border-b-[1px] border-zinc-700
-         text-lg flex font-semibold items-center justify-center text-white">
-          <InboxBtn allData={allData}/>
-          <h1 className="">JoiNVR</h1>
-          <SearchBtn onClick={toggleSearch} isSearch={isSearch} />
+        <div className="w-full">
+          <div
+            className="h-[60px] w-full border-b-[1px] border-zinc-700
+         text-lg flex font-semibold items-center justify-center text-white"
+          >
+            <InboxBtn allData={allData} />
+            <h1 className="">JoiNVR</h1>
+            <SearchBtn onClick={toggleSearch} isSearch={isSearch} />
+          </div>
         </div>
         {!isSearch ? handlePostsAppear() : handleSearchAppear()}
       </div>

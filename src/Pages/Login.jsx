@@ -34,7 +34,7 @@ function Login({
       triggerMessage("Username or password is invalid");
       return;
     }
-    if (allData[username].pass !== password) {
+    if (allData[username]?.pass !== password) {
       triggerMessage("Username or password is invalid");
       return;
     }

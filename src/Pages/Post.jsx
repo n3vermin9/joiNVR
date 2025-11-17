@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BubbleMessage from "../Components/BubbleMessage";
 import NavBar from "../Components/NavBar";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ function Post({
 }) {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
+  const inputRef = useRef(null);
 
   const textLimit = 200;
 
@@ -25,6 +26,12 @@ function Post({
     setInputValue(value);
   };
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   const handlePost = () => {
     if (!inputValue) return;
     const date = new Date();
@@ -34,7 +41,22 @@ function Post({
     const mo = String(date.getMonth() + 1).padStart(2, "0");
     const yy = String(date.getFullYear()).slice(-2);
 
-    const time = `${hh}:${mm}, ${dd}.${mo}.${yy}`;
+    const months = [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "dec",
+    ];
+
+    const time = `${hh}:${mm}, ${months[parseInt(mo - 1)]} ${dd}`;
 
     let newPost = {
       id: Date.now(),
@@ -46,13 +68,44 @@ function Post({
 
     const updatedPosts = [...allData["currentUser"].posts, newPost];
 
-    const newAllData = {
+    let newAllData = {
       ...allData,
       ["currentUser"]: {
         ...allData["currentUser"],
         posts: updatedPosts,
       },
     };
+
+    // const notificationId = `${allData["currentUser"].id}_${Date.now()}`;
+
+    // const newNotification = {
+    //   id: notificationId,
+    //   user: allData["currentUser"].name,
+    //   notification: `posted`,
+    //   link: Date.now(),
+    //   icon: "post",
+    //   time: time,
+    //   unread: true,
+    // };
+
+    // const followerIds = Object.values(allData)
+    //   .filter((user) => allData["currentUser"].followers.includes(user.id))
+    //   .map((user) => user.id);
+
+    // followerIds.forEach((followerId) => {
+    //   const followerData = allData[followerId];
+    //   if (followerData) {
+    //     const updatedInbox = [...followerData.inbox, newNotification];
+
+    //     newAllData = {
+    //       ...newAllData,
+    //       [followerId]: {
+    //         ...followerData,
+    //         inbox: updatedInbox,
+    //       },
+    //     };
+    //   }
+    // });
 
     setAllData(newAllData);
     localStorage.setItem("allData", JSON.stringify(newAllData));
@@ -62,6 +115,12 @@ function Post({
     navigate("/");
   };
 
+  const handleKeyDown = (e) => {
+    console.log("Key pressed:", e.key);
+    if (e.key === "Enter") {
+      handlePost();
+    }
+  };
   return (
     <>
       <div
@@ -76,7 +135,9 @@ function Post({
              border-zinc-500 resize-y min-h-[40px] break-words pb-4"
             placeholder="Share your thoughts"
             value={inputValue}
+            ref={inputRef}
             onChange={handleInput}
+            onKeyDown={handleKeyDown}
             rows={10}
           />
           <p

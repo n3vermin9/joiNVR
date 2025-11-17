@@ -8,7 +8,7 @@ function InboxBtn({ allData }) {
   const notificationsCount = allData["currentUser"].inbox.filter(
     (obj) => obj.unread === true
   ).length;
-  
+   
   return (
     <button
       onClick={() => navigate("/inbox")}

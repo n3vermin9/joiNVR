@@ -28,7 +28,6 @@ function Comments({
   const [currentPost, setCurrentPost] = useState(post);
   const currentAuthor =
     post.user == allData["currentUser"].name ? "currentUser" : post.user;
-
   useEffect(() => {
     if (post && allData) {
       const userPosts = Object.values(allData).flatMap(
@@ -64,7 +63,6 @@ function Comments({
   };
   const handleComment = ({ postId, message }) => {
     if (!inputValue) return;
-    console.log(postId);
 
     const date = new Date();
     const mm = String(date.getMinutes()).padStart(2, "0");
@@ -73,10 +71,25 @@ function Comments({
     const mo = String(date.getMonth() + 1).padStart(2, "0");
     const yy = String(date.getFullYear()).slice(-2);
 
-    const time = `${hh}:${mm}, ${dd}.${mo}.${yy}`;
+    const months = [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "dec",
+    ];
+
+    const time = `${hh}:${mm}, ${months[parseInt(mo - 1)]} ${dd}`;
     let updatedInbox;
 
-    const notificationId = `${allData["currentUser"].id}_${time}`;
+    const notificationId = `${allData["currentUser"].id}_${Date.now()}`;
 
     if (allData["currentUser"].name !== post.user) {
       const newNotification = {
@@ -107,7 +120,6 @@ function Comments({
       time: time,
       likes: [],
     };
-    console.log(newComment)
 
     const newAllData = {
       ...allData,
@@ -131,6 +143,18 @@ function Comments({
     };
     setAllData(newAllData);
     localStorage.setItem("allData", JSON.stringify(newAllData));
+  };
+
+  const handleKeyDown = (e) => {
+    console.log("Key pressed:", e.key);
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleComment({
+        postId: currentPost.id,
+        message: inputValue,
+      });
+      setInputValue("");
+    }
   };
 
   const displayComments = () => {
@@ -209,6 +233,7 @@ function Comments({
         <Input
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           placeholder={"Comment..."}
           classes={
             "up bg-zinc-800 w-[80%] border border-zinc-600 text-white rounded-[100px]"
